@@ -1,3 +1,5 @@
+//Database queries
+
 CREATE DATABASE Movies;
 
 use Movies; 
@@ -35,3 +37,91 @@ CREATE TABLE MOVIES( MOVIEID int, MOVIETITLE VARCHAR(25), MOVIEYEAR int, MOVIELA
  INSERT INTO MOVIES VALUES(54,'Vikranth Rona',2022,'kannada','04');
  
  SELECT * FROM MOVIES;
+ 
+ 
+ //Connecting to Database using Java programming language and performing queries
+ 
+ package Test1;
+ import java.sql.Connection;
+ import java.sql.DriverManager;
+ import java.sql.Statement;
+ 
+ public class MovieDb{
+     public static void main(String[] args) throws Exception
+     {
+         //load the driver
+         Class.forName("com.mysql.cj.jdbc.Driver");
+         
+         //Establish the connection between java application and Mysql
+         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/movies","root","root");
+         
+         Statement st = null;
+         ResultSet rs = null;
+         
+         //create statement object
+         Statement st = con.createStatement();
+         PreparedStatement s1 = con.prepareStatement();
+         
+         
+        //Write and execute sql query
+        String query1 = "CREATE TABLE ACTOR(ACTIONID int, ACTOR VARCHAR(100), ACTRESS VARCHAR(100), PRIMARY KEY (ACTIONID))";
+        st.executeUpdate(query1);
+        
+        String query2 = "INSERT INTO ACTOR(ACTIONID, ACTOR,ACTRESS)values(100,'Yash','Shrinidhi'),(101,'PRABHAS','ANUSHKA'),(102,'Darshan','Rakshitha'),(103,'Sudeepp','priyanka');
+        s1.executeUpdate(query2);
+        
+        //Director table 
+        String query3 = "CREATE TABLE DIRECTOR( DIRECTORID int, DIRECTORNAME VARCHAR(30), PRIMARY KEY (DIRECTORID))"; 
+        st.executeUpdate(query3);
+        
+        String query4 = "INSERT INTO DIRECTOR (DIRECTORID,DIRECTORNAME)values(01,'Prashanth neel'),(02,'Rajamouli'),(03,'Santhosh'),(04,'prem');
+        s1.executeUpdate(query4);
+        
+        //Movies table
+        String query5 = "CREATE TABLE MOVIES( MOVIEID int, MOVIETITLE VARCHAR(25), MOVIEYEAR int, MOVIELANG VARCHAR(12), DIRECTORID int, PRIMARY KEY (MOVIEID), FOREIGN KEY (DIRECTORID) REFERENCES DIRECTOR(DIRECTORID))";
+        st.executeUpdate(query5);
+        
+        String query6 = "INSERT INTO MOVIES(MOVIEID ,MOVIETITLE,MOVIEYEAR,MOVIELANG,DIRECTORID)values(51,'KGF-1&2',2017,'Kannada','01'),(52,'BAHUBALI-1&2',2015,'Telugu','02'),(53,'Robbert',2008,'KANNADA','03'),(54,'Vikranth Rona',2022,'kannada','04');
+        s1.executeUpdate(query6);
+        
+        //fetching (Retrieving) records from the table
+        rs = st.ececuteQuery("SELECT * FROM ACTOR");
+        while(rs.next())
+        {
+            System.out.println(rs.getString(1));
+            System.out.println(rs.getString(2));
+        }
+        rs.close();
+        
+       // retrieving From Director table
+        rs = st.ececuteQuery("SELECT * FROM DIRECTOR");
+        while(rs.next())
+        {
+            System.out.println(rs.getString(1));
+            System.out.println(rs.getString(2));
+        }
+        rs.close();
+        
+       //retrieving form movies table 
+       rs = st.ececuteQuery("SELECT * FROM MOVIES");
+        while(rs.next())
+        {
+            System.out.println(rs.getString(1));
+            System.out.println(rs.getString(2));
+        }
+        rs.close();
+        
+        System.out.println("Successful");
+        con.close();
+        }
+}
+        
+        
+          
+            
+        
+        
+        
+        
+        
+ 
